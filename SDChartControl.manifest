@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0">
+
+  <assemblyIdentity
+      name="SDChartControl"
+      version="1.0.0.0"
+      processorArchitecture="x86"
+      type="win32"/>
+
+  <clrClass
+      clsid="{DA0BC432-AB25-4A1E-BBF5-608E0A084934}"
+      progid="SDChartControl.SDChartControl"
+      threadingModel="Apartment"
+      name="SDChartControl.SDChartControl"
+      runtimeVersion="v4.0.30319">
+  </clrClass>
+
+  <file name="SDChartControl.dll">
+     <typelib
+         tlbid="{EAD4D0BA-A1DC-49C8-A9CF-7DBA487BB443}"
+         version="1.0"
+         helpdir=""
+         resourceid="0"
+         flags="HASDISKIMAGE"/>
+  </file>
+
+</assembly>

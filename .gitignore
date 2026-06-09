@@ -1,0 +1,21 @@
+# Build outputs
+bin/
+obj/
+
+# Clarion deployment folder (generated artifacts)
+Clarion/
+
+# Visual Studio
+*.user
+*.suo
+.vs/
+
+# NuGet
+packages/
+
+# OS
+Thumbs.db
+.DS_Store
+
+# Parsed interface cache
+ParsedInterface.json

@@ -1,0 +1,104 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- ClarionCOMHome: path to global ClarionCOM installation -->
+    <ClarionCOMHome Condition="'$(ClarionCOMHome)' == ''">$(APPDATA)\ClarionCOM</ClarionCOMHome>
+
+    <!-- .NET Framework 4.7.2 — required for COM and DataVisualization.Charting -->
+    <TargetFramework>net472</TargetFramework>
+    <UseWindowsForms>true</UseWindowsForms>
+
+    <!-- CRITICAL: x86 for 32-bit Clarion -->
+    <PlatformTarget>x86</PlatformTarget>
+    <OutputType>Library</OutputType>
+    <RuntimeIdentifier>win-x86</RuntimeIdentifier>
+
+    <ComVisible>true</ComVisible>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <AssemblyName>SDChartControl</AssemblyName>
+    <RootNamespace>SDChartControl</RootNamespace>
+  </PropertyGroup>
+
+  <!-- CRITICAL: Exclude Template folder to avoid duplicate assembly attributes -->
+  <ItemGroup>
+    <Compile Remove="Template\**\*" />
+    <None Remove="Template\**\*" />
+    <Content Remove="Template\**\*" />
+    <EmbeddedResource Remove="Template\**\*" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Drawing" />
+    <!-- Microsoft Chart Controls — included in .NET Framework, no NuGet needed -->
+    <Reference Include="System.Windows.Forms.DataVisualization" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <!-- Deploy to Clarion/accessory/ within the project folder -->
+    <ClarionDeployPath>$(ProjectDir)Clarion\</ClarionDeployPath>
+    <ClarionAccessoryPath>$(ClarionDeployPath)accessory\</ClarionAccessoryPath>
+    <ClarionBinPath>$(ClarionAccessoryPath)bin\</ClarionBinPath>
+    <ClarionResourcesPath>$(ClarionAccessoryPath)resources\</ClarionResourcesPath>
+  </PropertyGroup>
+
+  <!-- Deploy DLLs to Clarion/accessory/bin, manifest to Clarion/accessory/resources -->
+  <Target Name="DeployClarionFiles" AfterTargets="Build">
+    <ItemGroup>
+      <DllFiles Include="$(OutputPath)*.dll" />
+    </ItemGroup>
+
+    <MakeDir Directories="$(ClarionBinPath)"       Condition="!Exists('$(ClarionBinPath)')" />
+    <MakeDir Directories="$(ClarionResourcesPath)" Condition="!Exists('$(ClarionResourcesPath)')" />
+
+    <Copy SourceFiles="@(DllFiles)"
+          DestinationFolder="$(ClarionBinPath)"
+          SkipUnchangedFiles="true" />
+
+    <Copy SourceFiles="$(ProjectDir)$(AssemblyName).manifest"
+          DestinationFolder="$(ClarionResourcesPath)"
+          SkipUnchangedFiles="true"
+          Condition="Exists('$(ProjectDir)$(AssemblyName).manifest')" />
+
+    <Message Text="Deployed DLLs to $(ClarionBinPath)" Importance="high" />
+    <Message Text="Deployed manifest to $(ClarionResourcesPath)" Importance="high" />
+  </Target>
+
+  <!-- Generate Clarion metadata files (.header, .details, .events, .methods) -->
+  <Target Name="GenerateClarionMetadata" AfterTargets="DeployClarionFiles">
+    <PropertyGroup>
+      <MetadataScriptPath>$(ClarionCOMHome)\scripts\GenerateClarionMetadata.ps1</MetadataScriptPath>
+      <MetadataProjectDir>$(ProjectDir.TrimEnd('\'))</MetadataProjectDir>
+      <MetadataDeployPath>$(ClarionResourcesPath.TrimEnd('\'))</MetadataDeployPath>
+    </PropertyGroup>
+    <Exec Command="powershell.exe -NoProfile -ExecutionPolicy Bypass -Command &quot;&amp; { &amp; '$(MetadataScriptPath)' -ProjectDir '$(MetadataProjectDir)' -AssemblyName '$(AssemblyName)' -ClarionDeployPath '$(MetadataDeployPath)' }&quot;" />
+    <Message Text="Generated Clarion metadata files to $(ClarionResourcesPath)" Importance="high" />
+  </Target>
+
+  <!-- Parse COM interface for documentation -->
+  <Target Name="ParseCOMInterface" AfterTargets="GenerateClarionMetadata">
+    <Exec Command="powershell -ExecutionPolicy Bypass -File &quot;$(ClarionCOMHome)\scripts\ParseCOMInterface.ps1&quot; -ProjectDir &quot;$(ProjectDir)&quot;" />
+    <Message Text="Parsed COM interface files" Importance="high" />
+  </Target>
+
+  <!-- Generate README.html -->
+  <Target Name="GenerateReadmeHtml" AfterTargets="ParseCOMInterface">
+    <PropertyGroup>
+      <ReadmeFile>$(ClarionResourcesPath)readme_$(AssemblyName).html</ReadmeFile>
+      <ParsedDataFile>$(ProjectDir)ParsedInterface.json</ParsedDataFile>
+    </PropertyGroup>
+    <Exec Command="powershell -ExecutionPolicy Bypass -File &quot;$(ClarionCOMHome)\scripts\GenerateReadmeHTML.ps1&quot; -ParsedDataFile &quot;$(ParsedDataFile)&quot; -OutputFile &quot;$(ReadmeFile)&quot; -AssemblyName &quot;$(AssemblyName)&quot;" />
+    <Message Text="Generated README.html: $(ReadmeFile)" Importance="high" />
+  </Target>
+
+  <!-- AUTO-DEPLOY: Copy to Clarion installation if configured -->
+  <Target Name="DeployToClarionInstallation" AfterTargets="GenerateReadmeHtml">
+    <PropertyGroup>
+      <CopyScript>$(ClarionCOMHome)\scripts\copy-to-clarion.ps1</CopyScript>
+      <ClarionEnvScript>$(ClarionCOMHome)\scripts\clarioncom-env.ps1</ClarionEnvScript>
+    </PropertyGroup>
+    <Exec Command="powershell -ExecutionPolicy Bypass -Command &quot;$clarionPath = &amp; '$(ClarionEnvScript)' clarion; if ($clarionPath -and $clarionPath -ne 'NOT_CONFIGURED') { &amp; '$(CopyScript)' -ProjectFolder '$(ClarionAccessoryPath.TrimEnd('\'))' -ClarionPath $clarionPath -Target 'accessory' } else { Write-Host 'Clarion path not configured - skipping auto-deploy.' -ForegroundColor Yellow }&quot;"
+          IgnoreExitCode="true" />
+  </Target>
+
+</Project>
