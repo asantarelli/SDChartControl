@@ -74,5 +74,22 @@ namespace SDChartControl
         /// <summary>Shows control version and information</summary>
         [DispId(16)]
         void About();
+
+        /// <summary>Shows or hides data labels inside the chart. For pie: shows category name and percentage when enabled.</summary>
+        [DispId(17)]
+        void SetShowLabels(bool show);
+
+        /// <summary>Explodes (separates) all slices in a Pie or Doughnut chart. Has no effect on other chart types.</summary>
+        [DispId(18)]
+        void SetPieExploded(bool exploded);
+
+        /// <summary>Sets the threshold (%) below which slices are exploded. Slices with % of total below this value will be separated. Default: 20. Range: 1-99.</summary>
+        [DispId(19)]
+        void SetPieExplodeThreshold(int percent);
+
+        /// <summary>Sets the color of a specific data point by its label. Useful for coloring individual slices in Pie/Doughnut charts.</summary>
+        [DispId(20)]
+        void SetDataPointColor(string label, string hexColor);
+
     }
 }

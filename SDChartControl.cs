@@ -19,6 +19,9 @@ namespace SDChartControl
         private Chart _chart;
         private string _chartType = "Column";
         private string _lastError = string.Empty;
+        private bool _pieExploded = false;
+        private bool _showLabels = true;
+        private int _pieExplodeThreshold = 20;
 
         #endregion
 
@@ -136,6 +139,7 @@ namespace SDChartControl
                     _chart.Titles[0].Text = title ?? string.Empty;
                 else
                     _chart.Titles.Add(new Title(title ?? string.Empty));
+                AdjustChartAreaForTitle(title);
                 _chart.Invalidate();
             }
             catch (Exception ex) { _lastError = ex.Message; }
@@ -186,7 +190,12 @@ namespace SDChartControl
                     s.ChartArea = "MainArea";
                     _chart.Series.Add(s);
                 }
-                _chart.Series[0].Points.AddXY(label ?? string.Empty, value);
+                DataPoint dp = new DataPoint();
+                dp.AxisLabel = label ?? string.Empty;
+                dp.YValues = new double[] { value };
+                _chart.Series[0].Points.Add(dp);
+                if (_pieExploded)
+                    ApplyPieExploded(_chart.Series[0]);
                 _chart.Invalidate();
             }
             catch (Exception ex) { _lastError = ex.Message; }
@@ -218,7 +227,12 @@ namespace SDChartControl
                 Series series = _chart.Series.FindByName(seriesName);
                 if (series != null)
                 {
-                    series.Points.AddXY(label ?? string.Empty, value);
+                    DataPoint dp = new DataPoint();
+                    dp.AxisLabel = label ?? string.Empty;
+                    dp.YValues = new double[] { value };
+                    series.Points.Add(dp);
+                    if (_pieExploded)
+                        ApplyPieExploded(series);
                     _chart.Invalidate();
                 }
                 else
@@ -300,6 +314,22 @@ namespace SDChartControl
             catch (Exception ex) { _lastError = ex.Message; }
         }
 
+        public void SetDataPointColor(string label, string hexColor)
+        {
+            if (InvokeRequired) { Invoke(new Action<string, string>(SetDataPointColor), label, hexColor); return; }
+            try
+            {
+                if (_chart == null || string.IsNullOrEmpty(label)) return;
+                Color color = ColorTranslator.FromHtml(hexColor);
+                foreach (Series s in _chart.Series)
+                    foreach (DataPoint dp in s.Points)
+                        if (string.Equals(dp.AxisLabel, label, StringComparison.OrdinalIgnoreCase))
+                            dp.Color = color;
+                _chart.Invalidate();
+            }
+            catch (Exception ex) { _lastError = ex.Message; }
+        }
+
         public void SetFontSize(int size)
         {
             if (InvokeRequired) { Invoke(new Action<int>(SetFontSize), size); return; }
@@ -310,18 +340,124 @@ namespace SDChartControl
                 if (_chart.Titles.Count > 0)
                     _chart.Titles[0].Font = new Font("Arial", size, FontStyle.Bold);
 
+                float labelSize = Math.Max(6, size - 2);
+
                 if (_chart.ChartAreas.Count > 0)
                 {
-                    float labelSize = Math.Max(6, size - 2);
                     _chart.ChartAreas[0].AxisX.LabelStyle.Font = new Font("Arial", labelSize);
                     _chart.ChartAreas[0].AxisY.LabelStyle.Font = new Font("Arial", labelSize);
                     _chart.ChartAreas[0].AxisX.TitleFont = new Font("Arial", labelSize);
                     _chart.ChartAreas[0].AxisY.TitleFont = new Font("Arial", labelSize);
                 }
 
+                // Also update series labels (applies to pie slice text, data point labels, etc.)
+                foreach (Series s in _chart.Series)
+                    s.Font = new Font("Arial", labelSize);
+
+                if (_chart.Legends.Count > 0)
+                    _chart.Legends[0].Font = new Font("Arial", labelSize);
+
                 _chart.Invalidate();
             }
             catch (Exception ex) { _lastError = ex.Message; }
+        }
+
+        public void SetShowLabels(bool show)
+        {
+            if (InvokeRequired) { Invoke(new Action<bool>(SetShowLabels), show); return; }
+            _showLabels = show;
+            try
+            {
+                if (_chart == null) return;
+                foreach (Series s in _chart.Series)
+                    ApplyLabelSettings(s);
+                _chart.Invalidate();
+            }
+            catch (Exception ex) { _lastError = ex.Message; }
+        }
+
+        public void SetPieExploded(bool exploded)
+        {
+            if (InvokeRequired) { Invoke(new Action<bool>(SetPieExploded), exploded); return; }
+            _pieExploded = exploded;
+            try
+            {
+                if (_chart == null) return;
+                foreach (Series s in _chart.Series)
+                    ApplyPieExploded(s);
+                _chart.Invalidate();
+            }
+            catch (Exception ex) { _lastError = ex.Message; }
+        }
+
+        public void SetPieExplodeThreshold(int percent)
+        {
+            if (InvokeRequired) { Invoke(new Action<int>(SetPieExplodeThreshold), percent); return; }
+            if (percent < 1) percent = 1;
+            if (percent > 99) percent = 99;
+            _pieExplodeThreshold = percent;
+            try
+            {
+                if (_chart == null || !_pieExploded) return;
+                foreach (Series s in _chart.Series)
+                    ApplyPieExploded(s);
+                _chart.Invalidate();
+            }
+            catch (Exception ex) { _lastError = ex.Message; }
+        }
+
+
+
+
+        private void ApplyPieExploded(Series s)
+        {
+            if (!_pieExploded)
+            {
+                foreach (DataPoint dp in s.Points)
+                    dp["Exploded"] = "false";
+                return;
+            }
+
+            double total = 0;
+            foreach (DataPoint dp in s.Points)
+                if (dp.YValues.Length > 0) total += dp.YValues[0];
+
+            double threshold = _pieExplodeThreshold / 100.0;
+            foreach (DataPoint dp in s.Points)
+            {
+                double pct = (total > 0) ? dp.YValues[0] / total : 0;
+                dp["Exploded"] = (pct < threshold) ? "true" : "false";
+            }
+        }
+
+        private void AdjustChartAreaForTitle(string title)
+        {
+            if (_chart == null || _chart.Titles.Count == 0) return;
+            _chart.Titles[0].Visible = !string.IsNullOrWhiteSpace(title);
+        }
+
+        private void ApplyLabelSettings(Series s)
+        {
+            if (!_showLabels)
+            {
+                s.Label = string.Empty;
+                s.IsValueShownAsLabel = false;
+                // PieLabelStyle must be disabled explicitly — MSChart ignores Label="" for pie/doughnut
+                if (s.ChartType == SeriesChartType.Pie || s.ChartType == SeriesChartType.Doughnut)
+                    s["PieLabelStyle"] = "Disabled";
+            }
+            else
+            {
+                if (s.ChartType == SeriesChartType.Pie || s.ChartType == SeriesChartType.Doughnut)
+                {
+                    s["PieLabelStyle"] = "Outside";
+                    s.Label = "#AXISLABEL (#PERCENT{P0})";
+                }
+                else
+                {
+                    s.IsValueShownAsLabel = true;
+                }
+            }
         }
 
         #endregion

@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SDChartControl - Documentación Detallada</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #2d3748;
+            background: #f7fafc;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px;
+        }
+        .header h1 { font-size: 2.5em; margin-bottom: 8px; font-weight: 700; }
+        .header .version { font-size: 1em; opacity: 0.8; margin-bottom: 6px; }
+        .header .subtitle { font-size: 1.15em; opacity: 0.95; }
+        .content { padding: 40px; }
+        .info-box {
+            background: #ebf8ff;
+            border-left: 4px solid #4299e1;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .info-box strong { color: #2c5282; }
+        .warn-box {
+            background: #fffbeb;
+            border-left: 4px solid #d69e2e;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        .warn-box strong { color: #744210; }
+        .ok-box {
+            background: #f0fff4;
+            border-left: 4px solid #48bb78;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+        h2 {
+            color: #2d3748;
+            font-size: 1.8em;
+            margin: 40px 0 20px 0;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #667eea;
+        }
+        h3 {
+            color: #4a5568;
+            font-size: 1.2em;
+            margin: 25px 0 12px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 13px 14px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.88em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        td {
+            padding: 11px 14px;
+            border-bottom: 1px solid #e2e8f0;
+            vertical-align: top;
+            font-size: 0.95em;
+        }
+        tr:hover { background-color: #f7fafc; }
+        tbody tr:last-child td { border-bottom: none; }
+        code {
+            background: #edf2f7;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.9em;
+            color: #2d3748;
+            border: 1px solid #e2e8f0;
+        }
+        pre {
+            background: #1a202c;
+            color: #e2e8f0;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: 'Consolas', 'Monaco', monospace;
+            font-size: 0.88em;
+            line-height: 1.7;
+        }
+        .badge {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 10px;
+            font-size: 0.82em;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .badge-method  { background: linear-gradient(135deg, #48bb78 0%, #38a169 100%); color: white; }
+        .badge-event   { background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%); color: white; }
+        .badge-new     { background: #667eea; color: white; font-size: 0.75em; vertical-align: middle; margin-left: 6px; }
+        .section-card {
+            background: #f7fafc;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid #e2e8f0;
+        }
+        .tech-badge {
+            display: inline-block;
+            background: #2d3748;
+            color: white;
+            padding: 5px 11px;
+            border-radius: 6px;
+            font-size: 0.82em;
+            margin-right: 7px;
+            margin-bottom: 7px;
+        }
+        ul { margin: 12px 0; padding-left: 24px; }
+        li { margin: 7px 0; color: #4a5568; }
+        .toc { background: #f7fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 20px 28px; margin: 20px 0; }
+        .toc h3 { margin-top: 0; }
+        .toc ol { margin: 8px 0; padding-left: 20px; }
+        .toc li { margin: 5px 0; }
+        .toc a { color: #667eea; text-decoration: none; }
+        .toc a:hover { text-decoration: underline; }
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #e2e8f0;
+            text-align: center;
+            color: #718096;
+            font-size: 0.9em;
+        }
+        .dispid { color: #a0aec0; font-size: 0.8em; margin-left: 6px; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>SDChartControl</h1>
+        <p class="version">Version 1.0.24 &mdash; Junio 2026</p>
+        <p class="subtitle">Control COM estadistico para aplicaciones Clarion &mdash; RegFree COM, .NET Framework 4.7.2 x86</p>
+    </div>
+    <div class="content">
+
+        <div class="info-box">
+            <strong>ProgID:</strong> <code>SDChartControl.SDChartControl</code>&nbsp;&nbsp;
+            <strong>DLL:</strong> <code>SDChartControl.dll</code>&nbsp;&nbsp;
+            <strong>Tipo:</strong> Registration-Free COM (sin registro en registry)
+        </div>
+
+        <div class="toc">
+            <h3>Contenido</h3>
+            <ol>
+                <li><a href="#despliegue">Despliegue en el cliente</a></li>
+                <li><a href="#manifest">Configuracion del manifest del EXE</a></li>
+                <li><a href="#metodos">Referencia de metodos</a></li>
+                <li><a href="#eventos">Eventos</a></li>
+                <li><a href="#pie">Graficos de Torta (Pie) &mdash; Guia detallada</a></li>
+                <li><a href="#colores">Colores por slice</a></li>
+                <li><a href="#titulo">Titulo y espacio del grafico</a></li>
+                <li><a href="#ejemplo">Ejemplo completo en Clarion</a></li>
+                <li><a href="#specs">Especificaciones tecnicas</a></li>
+            </ol>
+        </div>
+
+        <h2 id="despliegue">1. Despliegue en el cliente</h2>
+        <p>El control usa <strong>Registration-Free COM</strong>: no requiere registro en el registry ni permisos de administrador. Basta con copiar los archivos correctos junto al EXE de la aplicacion.</p>
+
+        <h3>Archivos requeridos en el directorio del EXE</h3>
+        <table>
+            <thead><tr><th>Archivo</th><th>Descripcion</th><th>Obligatorio</th></tr></thead>
+            <tbody>
+                <tr><td><code>SDChartControl.dll</code></td><td>Libreria COM del control</td><td>Si</td></tr>
+                <tr><td><code>SDChartControl.manifest</code></td><td>Registro RegFree COM</td><td>Si</td></tr>
+                <tr><td><code>System.Windows.Forms.DataVisualization.dll</code></td><td>Motor de graficos MSChart. Normalmente en el GAC del sistema. Copiar solo si el control no activa.</td><td>Solo si falta en GAC</td></tr>
+            </tbody>
+        </table>
+
+        <div class="warn-box">
+            <strong>Requisito del sistema:</strong> .NET Framework 4.7.2 o superior debe estar instalado en el cliente.<br>
+            Para verificar: <code>reg query "HKLM\SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full" /v Release</code><br>
+            Valor &ge; 461808 = 4.7.2. Valor &ge; 528040 = 4.8.
+        </div>
+
+        <h2 id="manifest">2. Configuracion del manifest del EXE</h2>
+        <p>El EXE de Clarion necesita un manifest (<code>MIAPLICACION.exe.manifest</code>) que declare la dependencia hacia SDChartControl. Agregar este bloque antes del <code>&lt;/assembly&gt;</code> final:</p>
+
+        <pre>&lt;dependency&gt;
+  &lt;dependentAssembly&gt;
+    &lt;assemblyIdentity
+      type="win32"
+      name="SDChartControl"
+      version="1.0.24.0"
+      processorArchitecture="x86"
+      language="*"
+    /&gt;
+  &lt;/dependentAssembly&gt;
+&lt;/dependency&gt;</pre>
+
+        <div class="warn-box">
+            <strong>Importante:</strong> El atributo <code>version</code> debe coincidir exactamente con el que figura en <code>SDChartControl.manifest</code>. Al actualizar el control, actualizar tambien este numero.
+        </div>
+
+        <h2 id="metodos">3. Referencia de metodos</h2>
+
+        <h3>Tipo de grafico</h3>
+        <table>
+            <thead><tr><th>Metodo</th><th>Parametros</th><th>Descripcion</th></tr></thead>
+            <tbody>
+                <tr>
+                    <td><span class="badge badge-method">SetChartType</span><span class="dispid">DispId 1</span></td>
+                    <td><code>chartType STRING</code></td>
+                    <td>Define el tipo de grafico. Valores: <code>Bar</code>, <code>Column</code>, <code>Pie</code>, <code>Line</code>, <code>Area</code>, <code>Doughnut</code>, <code>Spline</code>, <code>SplineArea</code></td>
+                </tr>
+                <tr>
+                    <td><span class="badge badge-method">GetChartType</span><span class="dispid">DispId 2</span></td>
+                    <td>&mdash;</td>
+                    <td>Retorna el tipo de grafico actual como STRING</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Titulos y ejes</h3>
+        <table>
+            <thead><tr><th>Metodo</th><th>Parametros</th><th>Descripcion</th></tr></thead>
+            <tbody>
+                <tr>
+                    <td><span class="badge badge-method">SetTitle</span><span class="dispid">DispId 3</span></td>
+                    <td><code>title STRING</code></td>
+                    <td>Titulo principal del grafico. Si se pasa vacio, el titulo se oculta y el area del grafico ocupa todo el espacio disponible.</td>
+                </tr>
+                <tr>
+                    <td><span class="badge badge-method">SetXAxisTitle</span><span class="dispid">DispId 4</span></td>
+                    <td><code>title STRING</code></td>
+                    <td>Titulo del eje X (no aplica en Pie/Doughnut)</td>
+                </tr>
+                <tr>
+                    <td><span class="badge badge-method">SetYAxisTitle</span><span class="dispid">DispId 5</span></td>
+                    <td><code>title STRING</code></td>
+                    <td>Titulo del eje Y (no aplica en Pie/Doughnut)</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Datos</h3>
+        <table>
+            <thead><tr><th>Metodo</th><th>Parametros</th><th>Descripcion</th></tr></thead>
+            <tbody>
+                <tr>
+                    <td><span class="badge badge-method">AddDataPoint</span><span class="dispid">DispId 6</span></td>
+                    <td><code>label STRING, value REAL</code></td>
+                    <td>Agrega un punto a la serie principal (Series1). El <code>label</code> es la etiqueta visible y la clave para <code>SetDataPointColor</code>.</td>
+                </tr>
+                <tr>
+                    <td><span class="badge badge-method">AddSeries</span><span class="dispid">DispId 7</span></td>
+                    <td><code>seriesName STRING</code></td>
+                    <td>Crea una nueva serie con nombre para graficos multi-serie</td>
+                </tr>
+                <tr>
+                    <td><span class="badge badge-method">AddDataPointToSeries</span><span class="dispid">DispId 8</span></td>
+                    <td><code>seriesName STRING, label STRING, value REAL</code></td>
+                    <td>Agrega un punto a una serie nombrada especifica</td>
+                </tr>
+                <tr>
+                    <td><span class="badge badge-method">ClearData</span><span class="dispid">DispId 9</span></td>
+                    <td>&mdash;</td>
+                    <td>Elimina todos los puntos de todas las series. No elimina las series ni cambia el tipo de grafico.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Colores y apariencia</h3>
+        <table>
+            <thead><tr><th>Metodo</th><th>Parametros</th><th>Descripcion</th></tr></thead>
+            <tbody>
+                <tr>
+                    <td><span class="badge badge-method">SetBackgroundColor</span><span class="dispid">DispId 10</span></td>
+                    <td><code>hexColor STRING</code></td>
+                    <td>Color de fondo del control (ej: <code>#FFFFFF</code>)</td>
+                </tr>
+                <tr>
+                    <td><span class="badge badge-method">SetTitleColor</span><span class="dispid">DispId 11</span></td>
+                    <td><code>hexColor STRING</code></td>
+                    <td>Color del texto del titulo</td>
+                </tr>
+                <tr>
+                    <td><span class="badge badge-method">SetSeriesColor</span><span class="dispid">DispId 12</span></td>
+                    <td><code>seriesName STRING, hexColor STRING</code></td>
+                    <td>Color de toda una serie. Pasar <code>seriesName</code> vacio aplica a la primera serie.</td>
+                </tr>
+                <tr>
+                    <td><span class="badge badge-method">SetDataPointColor</span><span class="dispid">DispId 20</span> <span class="badge badge-new">NUEVO</span></td>
+                    <td><code>label STRING, hexColor STRING</code></td>
+                    <td>Asigna un color especifico a un slice/punto identificado por su label. Ideal para colorear individualmente cada sector de un grafico Pie o Doughnut. El label es case-insensitive.</td>
+                </tr>
+                <tr>
+                    <td><span class="badge badge-method">SetFontSize</span><span class="dispid">DispId 13</span></td>
+                    <td><code>size LONG</code></td>
+                    <td>Tamano base de fuente para etiquetas y titulo (en puntos)</td>
+                </tr>
+                <tr>
+                    <td><span class="badge badge-method">SetShowLabels</span><span class="dispid">DispId 17</span></td>
+                    <td><code>show BYTE</code></td>
+                    <td>Muestra u oculta etiquetas de datos. En Pie: muestra nombre y porcentaje cuando esta activo.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Pie / Doughnut &mdash; Explode</h3>
+        <table>
+            <thead><tr><th>Metodo</th><th>Parametros</th><th>Descripcion</th></tr></thead>
+            <tbody>
+                <tr>
+                    <td><span class="badge badge-method">SetPieExploded</span><span class="dispid">DispId 18</span></td>
+                    <td><code>exploded BYTE</code></td>
+                    <td>Activa (1) o desactiva (0) el efecto explode. Los slices que representen menos del umbral definido por <code>SetPieExplodeThreshold</code> se separaran del centro.</td>
+                </tr>
+                <tr>
+                    <td><span class="badge badge-method">SetPieExplodeThreshold</span><span class="dispid">DispId 19</span> <span class="badge badge-new">NUEVO</span></td>
+                    <td><code>percent LONG</code></td>
+                    <td>Umbral (1&ndash;99) por debajo del cual un slice se separa. Default: <strong>20</strong>. Los slices con porcentaje menor a este valor se exploran; los demas permanecen en su lugar.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h3>Utilidades</h3>
+        <table>
+            <thead><tr><th>Metodo</th><th>Parametros</th><th>Retorna</th><th>Descripcion</th></tr></thead>
+            <tbody>
+                <tr>
+                    <td><span class="badge badge-method">SaveAsJpeg</span><span class="dispid">DispId 14</span></td>
+                    <td><code>filePath STRING</code></td>
+                    <td>&mdash;</td>
+                    <td>Guarda el grafico como imagen JPEG</td>
+                </tr>
+                <tr>
+                    <td><span class="badge badge-method">GetLastError</span><span class="dispid">DispId 15</span></td>
+                    <td>&mdash;</td>
+                    <td><code>STRING</code></td>
+                    <td>Retorna el ultimo mensaje de error, o cadena vacia si no hubo error</td>
+                </tr>
+                <tr>
+                    <td><span class="badge badge-method">About</span><span class="dispid">DispId 16</span></td>
+                    <td>&mdash;</td>
+                    <td>&mdash;</td>
+                    <td>Muestra un dialogo con la version y datos del control</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2 id="eventos">4. Eventos</h2>
+        <table>
+            <thead><tr><th>Evento</th><th>Parametros</th><th>Descripcion</th></tr></thead>
+            <tbody>
+                <tr>
+                    <td><span class="badge badge-event">ChartRendered</span></td>
+                    <td>&mdash;</td>
+                    <td>Se dispara cada vez que el grafico termina de renderizarse</td>
+                </tr>
+                <tr>
+                    <td><span class="badge badge-event">SaveCompleted</span></td>
+                    <td><code>filePath STRING, success BYTE</code></td>
+                    <td>Se dispara al completar <code>SaveAsJpeg</code>. <code>success=1</code> indica exito.</td>
+                </tr>
+                <tr>
+                    <td><span class="badge badge-event">DataPointClicked</span></td>
+                    <td><code>seriesName STRING, label STRING, value REAL</code></td>
+                    <td>Se dispara cuando el usuario hace clic sobre un punto o slice del grafico</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2 id="pie">5. Graficos de Torta (Pie) &mdash; Guia detallada</h2>
+
+        <h3>Efecto Explode</h3>
+        <p>El efecto explode separa visualmente los slices pequenos del resto de la torta. La logica aplicada es:</p>
+        <ul>
+            <li>Se calcula el porcentaje de cada slice sobre el total de todos los valores</li>
+            <li>Los slices con porcentaje <strong>menor</strong> al umbral se separan del centro</li>
+            <li>Los slices con porcentaje <strong>igual o mayor</strong> al umbral permanecen en su lugar</li>
+        </ul>
+
+        <div class="ok-box">
+            <strong>Nota tecnica:</strong> La distancia de separacion es fija e interna al motor MSChart WinForms y no es configurable por API. Lo que si es controlable es <em>que slices</em> se separan, mediante <code>SetPieExplodeThreshold</code>.
+        </div>
+
+        <pre>! Separar slices menores al 30%
+oChart.SetPieExplodeThreshold(30)
+oChart.SetPieExploded(1)
+
+! Desactivar el explode
+oChart.SetPieExploded(0)</pre>
+
+        <h2 id="colores">6. Colores por slice</h2>
+        <p>Cada slice puede tener su propio color. El label debe coincidir con el pasado en <code>AddDataPoint</code> (case-insensitive).</p>
+
+        <pre>oChart.AddDataPoint('Sueldo Neto',      85000)
+oChart.AddDataPoint('Seg. Social Emp.', 24000)
+oChart.AddDataPoint('Costo Sindical',    1800)
+oChart.AddDataPoint('Obra Social',       3200)
+
+oChart.SetDataPointColor('Sueldo Neto',      '#4472C4')
+oChart.SetDataPointColor('Seg. Social Emp.', '#ED7D31')
+oChart.SetDataPointColor('Costo Sindical',   '#FF0000')
+oChart.SetDataPointColor('Obra Social',      '#1F5C74')</pre>
+
+        <h2 id="titulo">7. Titulo y espacio del grafico</h2>
+        <p>Cuando el titulo esta vacio, el area del grafico se expande para aprovechar el espacio liberado.</p>
+
+        <pre>! Con titulo
+oChart.SetTitle('Composicion del Costo Laboral')
+
+! Sin titulo: el grafico ocupa mas espacio
+oChart.SetTitle('')</pre>
+
+        <h2 id="ejemplo">8. Ejemplo completo en Clarion</h2>
+        <pre>oChart.SetChartType('Pie')
+oChart.SetTitle('Composicion del Costo Laboral')
+oChart.SetShowLabels(1)
+oChart.SetFontSize(9)
+oChart.SetBackgroundColor('#FFFFFF')
+oChart.SetTitleColor('#2D3748')
+
+oChart.ClearData()
+oChart.AddDataPoint('Sueldo Neto',      SLD:SueldoNeto)
+oChart.AddDataPoint('Seg. Social Emp.', SLD:SegSocial)
+oChart.AddDataPoint('Costo Sindical',   SLD:Sindical)
+oChart.AddDataPoint('Obra Social',      SLD:ObraSocial)
+
+oChart.SetDataPointColor('Sueldo Neto',      '#4472C4')
+oChart.SetDataPointColor('Seg. Social Emp.', '#ED7D31')
+oChart.SetDataPointColor('Costo Sindical',   '#FF0000')
+oChart.SetDataPointColor('Obra Social',      '#1F5C74')
+
+oChart.SetPieExplodeThreshold(25)
+oChart.SetPieExploded(1)</pre>
+
+        <h2 id="specs">9. Especificaciones tecnicas</h2>
+        <div class="section-card">
+            <p><strong>Tecnologia:</strong></p>
+            <div style="margin:10px 0;">
+                <span class="tech-badge">.NET Framework 4.7.2+</span>
+                <span class="tech-badge">Win32 x86</span>
+                <span class="tech-badge">RegFree COM</span>
+                <span class="tech-badge">STA (Apartment)</span>
+                <span class="tech-badge">MSChart WinForms</span>
+            </div>
+            <br>
+            <p><strong>Configuracion COM:</strong></p>
+            <ul>
+                <li><strong>ProgID:</strong> <code>SDChartControl.SDChartControl</code></li>
+                <li><strong>CLSID:</strong> <code>{DA0BC432-AB25-4A1E-BBF5-608E0A084934}</code></li>
+                <li><strong>Interface IID:</strong> <code>{22FAC9B7-E57F-4CBD-AA73-91CF7F3D9BD0}</code></li>
+                <li><strong>Registro:</strong> Registration-Free (sin modificaciones al registry)</li>
+                <li><strong>Plataforma:</strong> x86 (32-bit) para compatibilidad con Clarion</li>
+            </ul>
+        </div>
+        <div class="section-card">
+            <p><strong>Archivos del paquete:</strong></p>
+            <ul>
+                <li><code>SDChartControl.dll</code> &mdash; Libreria COM</li>
+                <li><code>SDChartControl.manifest</code> &mdash; Registro RegFree COM</li>
+                <li><code>SDChartControl.header</code> &mdash; Metadata para Clarion IDE</li>
+                <li><code>SDChartControl.SDChartControl.details</code> &mdash; Detalles del control</li>
+                <li><code>SDChartControl.SDChartControl.methods</code> &mdash; Referencia de metodos</li>
+                <li><code>SDChartControl.SDChartControl.events</code> &mdash; Definicion de eventos</li>
+                <li><code>readme_SDChartControl.html</code> &mdash; Documentacion resumida (auto-generada)</li>
+                <li><code>readme_SDChartControl_Detalle.html</code> &mdash; Este documento</li>
+            </ul>
+        </div>
+
+        <div class="footer">
+            <p>SDChartControl &mdash; SD Digitales &mdash; v1.0.24</p>
+            <p>Registration-Free COM &bull; Sin registro en registry &bull; Sin permisos de administrador</p>
+        </div>
+    </div>
+</div>
+</body>
+</html>

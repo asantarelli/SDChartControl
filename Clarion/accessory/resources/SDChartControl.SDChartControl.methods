@@ -1,0 +1,226 @@
+﻿[Method]
+SetChartType
+[MethodDescription]
+Sets the chart type. Values: Bar, Column, Pie, Line, Area, Doughnut, Spline, SplineArea
+[Parameter]
+chartType
+[ParameterType]
+STRING
+[ParameterDescription]
+The chartType parameter.
+
+[Method]
+GetChartType
+[MethodDescription]
+Returns the current chart type name
+
+[Method]
+SetTitle
+[MethodDescription]
+Sets the main chart title
+[Parameter]
+title
+[ParameterType]
+STRING
+[ParameterDescription]
+The title parameter.
+
+[Method]
+SetXAxisTitle
+[MethodDescription]
+Sets the X axis title label
+[Parameter]
+title
+[ParameterType]
+STRING
+[ParameterDescription]
+The title parameter.
+
+[Method]
+SetYAxisTitle
+[MethodDescription]
+Sets the Y axis title label
+[Parameter]
+title
+[ParameterType]
+STRING
+[ParameterDescription]
+The title parameter.
+
+[Method]
+AddDataPoint
+[MethodDescription]
+Adds a data point to the default series (Series1)
+[Parameter]
+label
+[ParameterType]
+STRING
+[ParameterDescription]
+The label parameter.
+[Parameter]
+value
+[ParameterType]
+REAL
+[ParameterDescription]
+The value parameter.
+
+[Method]
+AddSeries
+[MethodDescription]
+Adds a new named data series to the chart
+[Parameter]
+seriesName
+[ParameterType]
+STRING
+[ParameterDescription]
+The seriesName parameter.
+
+[Method]
+AddDataPointToSeries
+[MethodDescription]
+Adds a data point to a specific named series
+[Parameter]
+seriesName
+[ParameterType]
+STRING
+[ParameterDescription]
+The seriesName parameter.
+[Parameter]
+label
+[ParameterType]
+STRING
+[ParameterDescription]
+The label parameter.
+[Parameter]
+value
+[ParameterType]
+REAL
+[ParameterDescription]
+The value parameter.
+
+[Method]
+ClearData
+[MethodDescription]
+Clears all data points from all series
+
+[Method]
+SetBackgroundColor
+[MethodDescription]
+Sets the chart background color (hex, e.g. #FFFFFF)
+[Parameter]
+hexColor
+[ParameterType]
+STRING
+[ParameterDescription]
+The hexColor parameter.
+
+[Method]
+SetTitleColor
+[MethodDescription]
+Sets the title text color (hex)
+[Parameter]
+hexColor
+[ParameterType]
+STRING
+[ParameterDescription]
+The hexColor parameter.
+
+[Method]
+SetSeriesColor
+[MethodDescription]
+Sets the color of a specific series (empty seriesName = first series)
+[Parameter]
+seriesName
+[ParameterType]
+STRING
+[ParameterDescription]
+The seriesName parameter.
+[Parameter]
+hexColor
+[ParameterType]
+STRING
+[ParameterDescription]
+The hexColor parameter.
+
+[Method]
+SetFontSize
+[MethodDescription]
+Sets the base font size for chart labels and title
+[Parameter]
+size
+[ParameterType]
+LONG
+[ParameterDescription]
+The size parameter.
+
+[Method]
+SaveAsJpeg
+[MethodDescription]
+Saves the chart as a JPEG image to the specified file path
+[Parameter]
+filePath
+[ParameterType]
+STRING
+[ParameterDescription]
+The filePath parameter.
+
+[Method]
+GetLastError
+[MethodDescription]
+Returns the last error message, or empty string if no error
+
+[Method]
+About
+[MethodDescription]
+Shows control version and information
+
+[Method]
+SetShowLabels
+[MethodDescription]
+Shows or hides data labels inside the chart. For pie: shows category name and percentage when enabled.
+[Parameter]
+show
+[ParameterType]
+BYTE
+[ParameterDescription]
+The show parameter.
+
+[Method]
+SetPieExploded
+[MethodDescription]
+Explodes (separates) all slices in a Pie or Doughnut chart. Has no effect on other chart types.
+[Parameter]
+exploded
+[ParameterType]
+BYTE
+[ParameterDescription]
+The exploded parameter.
+
+[Method]
+SetPieExplodeThreshold
+[MethodDescription]
+Sets the threshold (%) below which slices are exploded. Slices with % of total below this value will be separated. Default: 20. Range: 1-99.
+[Parameter]
+percent
+[ParameterType]
+LONG
+[ParameterDescription]
+The percent parameter.
+
+[Method]
+SetDataPointColor
+[MethodDescription]
+Sets the color of a specific data point by its label. Useful for coloring individual slices in Pie/Doughnut charts.
+[Parameter]
+label
+[ParameterType]
+STRING
+[ParameterDescription]
+The label parameter.
+[Parameter]
+hexColor
+[ParameterType]
+STRING
+[ParameterDescription]
+The hexColor parameter.
+

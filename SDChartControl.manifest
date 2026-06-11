@@ -3,7 +3,7 @@
 
   <assemblyIdentity
       name="SDChartControl"
-      version="1.0.0.0"
+      version="1.0.24.0"
       processorArchitecture="x86"
       type="win32"/>
 
@@ -16,12 +16,6 @@
   </clrClass>
 
   <file name="SDChartControl.dll">
-     <typelib
-         tlbid="{EAD4D0BA-A1DC-49C8-A9CF-7DBA487BB443}"
-         version="1.0"
-         helpdir=""
-         resourceid="0"
-         flags="HASDISKIMAGE"/>
   </file>
 
 </assembly>

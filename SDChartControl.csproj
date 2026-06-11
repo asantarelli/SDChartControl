@@ -42,8 +42,18 @@
     <ClarionResourcesPath>$(ClarionAccessoryPath)resources\</ClarionResourcesPath>
   </PropertyGroup>
 
+  <!-- Sync manifest version with AssemblyVersion before deploy -->
+  <Target Name="SyncManifestVersion" AfterTargets="Build">
+    <PropertyGroup>
+      <ManifestFile>$(ProjectDir)$(AssemblyName).manifest</ManifestFile>
+    </PropertyGroup>
+    <Exec Command="powershell -ExecutionPolicy Bypass -Command &quot;$v = (Select-String -Path '$(ProjectDir)Properties\AssemblyInfo.cs' -Pattern 'AssemblyVersion\(&quot;([\d.]+)&quot;\)').Matches[0].Groups[1].Value; $m = Get-Content '$(ManifestFile)' -Raw; $m = $m -replace 'version=&quot;[\d.]+&quot;(\s+processorArchitecture)', ('version=&quot;' + $v + '&quot;`$1'); Set-Content '$(ManifestFile)' $m -NoNewline&quot;"
+          IgnoreExitCode="true" />
+    <Message Text="Synced manifest version from AssemblyInfo" Importance="high" />
+  </Target>
+
   <!-- Deploy DLLs to Clarion/accessory/bin, manifest to Clarion/accessory/resources -->
-  <Target Name="DeployClarionFiles" AfterTargets="Build">
+  <Target Name="DeployClarionFiles" AfterTargets="SyncManifestVersion">
     <ItemGroup>
       <DllFiles Include="$(OutputPath)*.dll" />
     </ItemGroup>
